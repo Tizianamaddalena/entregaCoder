@@ -1,0 +1,57 @@
+/* 
+ =============================================================================================== 
+ =============================================================================================== 
+ =============================DESAFIO TCL====================================================
+ =============================================================================================== 
+ =============================================================================================== 
+ */ 
+ 
+ 
+DROP SCHEMA IF EXISTS BD_PRADA ;
+CREATE SCHEMA IF NOT EXISTS BD_PRADA ;
+USE BD_PRADA;
+
+-- ELIMINO REGISTROS DE LA TABLA PRODUCTO 
+ROLLBACK; -- PARA ASEGURARNOS QUE NO TOME MAS DATOS DE ARRIBA
+START TRANSACTION;
+
+SELECT @@AUTOCOMMIT;
+SET AUTOCOMMIT = 1 ;
+SET AUTOCOMMIT = 0 ; 
+
+SET @@FOREIGN_KEY_CHECKS = 0;
+SET SQL_SAFE_UPDATES = 0;
+
+SELECT * FROM PRODUCTOS WHERE PRECIO > '1500';
+DELETE FROM PRODUCTOS WHERE ID_PRODUCTO = 11002;
+DELETE FROM PRODUCTOS WHERE ID_PRODUCTO = 11018;
+
+-- ROLLBACK;
+-- COMMIT;
+
+-- INSERT INTO PRODUCTOS VALUES (11002,'Embroidered organza shirt','1800', 1);
+-- INSERT INTO PRODUCTOS VALUES (11018,'Leather sneakers crystals','1650', 3);
+
+-- ---------------------------------------------------------
+-- INSERTO DATOS CON SAVEPOINT EN LA TABLA PEDIDOS 
+ROLLBACK;
+START TRANSACTION ;
+
+
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (15,11034,'07-09-23');
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (10,11023,'03-12-23');
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (9,11024,'09-08-23');
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (1,11029,'02-05-23');
+
+SAVEPOINT sp1 ;
+
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (8,11005,'01-01-23');
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (7,11008,'04-09-23');
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (11,11006,'07-07-23');
+INSERT INTO PEDIDOS (ID_CLIENTE, ID_PRODUCTO,FECHA) VALUES (14,11022,'12-03-23');
+
+SAVEPOINT sp2 ;
+
+ROLLBACK to sp1 ;
+-- rollback
+-- COMMIT;
